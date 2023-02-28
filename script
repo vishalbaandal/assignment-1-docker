@@ -1,0 +1,41 @@
+pipeline{
+  agent{
+    label{
+        label "built-in"
+        customWorkspace "/mnt/vishal-docker/"
+    }
+
+  }
+  stages{
+      stage("clean Workspace"){
+      steps{
+             cleanWs()
+           }
+          }
+      
+      
+      
+      stage("Git Checkout"){
+      steps{ 
+             sh "yum install git -y"
+             sh "git clone -b branch-1 https://github.com/vishalbaandal/assignment-1-docker.git"
+           }
+          }
+    stage("deploy server1"){
+                steps{
+                   
+                    sh "yum install docker -y"
+                    sh "yum install httpd -y"
+                    sh "service httpd start"
+                    sh "docker login"
+                    sh "docker system prune -a -f"
+                    sh "docker pull ubuntu:18.04"
+                    sh "docker run -itp 90:80 ubuntu:18.04 httpd"
+                    sh "apt-get install yum -y"
+                    sh "apt-get install git -y"
+                    sh "apt-get install vim -y"
+                    sh "cp /mnt/vishal-docker/index.html /usr/local/apache2/htdocs/"
+                }
+        }
+    }
+}
